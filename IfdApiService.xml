@@ -1,0 +1,750 @@
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="IfdApiService.Models" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="XtdRoot" Abstract="true">
+        <Key>
+          <PropertyRef Name="UniqueId" />
+        </Key>
+        <Property Name="UniqueId" Type="Edm.Guid" Nullable="false" />
+      </EntityType>
+      <EntityType Name="XtdLanguage_Comment">
+        <Key>
+          <PropertyRef Name="UniqueId" />
+        </Key>
+        <Property Name="UniqueId" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Comment" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="XtdUserWithRoles_Role">
+        <Key>
+          <PropertyRef Name="UniqueId" />
+        </Key>
+        <Property Name="UniqueId" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Role" Type="IfdApiService.Models.XtdRoleEnum" Nullable="false" />
+      </EntityType>
+      <EntityType Name="XtdObject" BaseType="IfdApiService.Models.XtdRoot" Abstract="true">
+        <Property Name="Status" Type="IfdApiService.Models.XtdStatusOfActivationEnum" Nullable="false" />
+        <Property Name="MajorVersion" Type="Edm.Int32" Nullable="false" />
+        <Property Name="MinorVersion" Type="Edm.Int32" Nullable="false" />
+        <Property Name="DateOfCreation" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="TypeOf" Type="Edm.String" />
+        <NavigationProperty Name="Dictionary" Type="IfdApiService.Models.XtdDictionary" />
+        <NavigationProperty Name="Names" Type="Collection(IfdApiService.Models.XtdMultiLanguageText)" />
+        <NavigationProperty Name="ReplacedObjects" Type="Collection(IfdApiService.Models.XtdObject)" />
+        <NavigationProperty Name="DeprecationExplanation" Type="IfdApiService.Models.XtdMultiLanguageText" />
+        <NavigationProperty Name="ReplacingObjects" Type="Collection(IfdApiService.Models.XtdObject)" />
+      </EntityType>
+      <EntityType Name="XtdChangeRequest" BaseType="IfdApiService.Models.XtdObject">
+        <Property Name="Nature" Type="IfdApiService.Models.XtdNatureOfChangeEnum" Nullable="false" />
+        <Property Name="RequestExternalStatus" Type="IfdApiService.Models.XtdExternalStatusEnum" Nullable="false" />
+        <NavigationProperty Name="Applicant" Type="IfdApiService.Models.XtdUser" />
+        <NavigationProperty Name="NewObjects" Type="Collection(IfdApiService.Models.XtdObject)" />
+        <NavigationProperty Name="Experts" Type="Collection(IfdApiService.Models.XtdExpertWithStatus)" />
+        <NavigationProperty Name="ApplicantExplanation" Type="IfdApiService.Models.XtdMultiLanguageText" />
+      </EntityType>
+      <EntityType Name="XtdConcept" BaseType="IfdApiService.Models.XtdObject" Abstract="true">
+        <NavigationProperty Name="ReferenceDocuments" Type="Collection(IfdApiService.Models.XtdExternalDocument)" />
+        <NavigationProperty Name="Definition" Type="IfdApiService.Models.XtdMultiLanguageText" />
+        <NavigationProperty Name="Descriptions" Type="Collection(IfdApiService.Models.XtdMultiLanguageText)" />
+        <NavigationProperty Name="Examples" Type="Collection(IfdApiService.Models.XtdMultiLanguageText)" />
+        <NavigationProperty Name="LanguageOfCreator" Type="IfdApiService.Models.XtdLanguage" />
+        <NavigationProperty Name="CountryOfOrigin" Type="IfdApiService.Models.XtdCountry" />
+        <NavigationProperty Name="SimilarTo" Type="Collection(IfdApiService.Models.XtdConcept)" />
+        <NavigationProperty Name="VisualRepresentations" Type="Collection(IfdApiService.Models.XtdVisualRepresentation)" />
+      </EntityType>
+      <EntityType Name="XtdCountry" BaseType="IfdApiService.Models.XtdConcept">
+        <Property Name="Code" Type="Edm.String" />
+        <NavigationProperty Name="Subdivisions" Type="Collection(IfdApiService.Models.XtdSubdivision)" />
+      </EntityType>
+      <EntityType Name="XtdDictionary" BaseType="IfdApiService.Models.XtdRoot">
+        <NavigationProperty Name="Name" Type="IfdApiService.Models.XtdMultiLanguageText" />
+      </EntityType>
+      <EntityType Name="XtdDimension" BaseType="IfdApiService.Models.XtdConcept">
+        <NavigationProperty Name="LengthExponent" Type="IfdApiService.Models.XtdRational" />
+        <NavigationProperty Name="MassExponent" Type="IfdApiService.Models.XtdRational" />
+        <NavigationProperty Name="TimeExponent" Type="IfdApiService.Models.XtdRational" />
+        <NavigationProperty Name="ElectricCurrentExponent" Type="IfdApiService.Models.XtdRational" />
+        <NavigationProperty Name="ThermodynamicTemperatureExponent" Type="IfdApiService.Models.XtdRational" />
+        <NavigationProperty Name="AmountOfSubstanceExponent" Type="IfdApiService.Models.XtdRational" />
+        <NavigationProperty Name="LuminousIntensityExponent" Type="IfdApiService.Models.XtdRational" />
+      </EntityType>
+      <EntityType Name="XtdExpert" BaseType="IfdApiService.Models.XtdRoot">
+        <NavigationProperty Name="UserWithRoles" Type="IfdApiService.Models.XtdUserWithRoles" />
+        <NavigationProperty Name="AreasOfExpertise" Type="Collection(IfdApiService.Models.XtdSubject)" />
+      </EntityType>
+      <EntityType Name="XtdExpertWithStatus" BaseType="IfdApiService.Models.XtdRoot">
+        <Property Name="RequestInternalStatus" Type="IfdApiService.Models.XtdInternalStatusEnum" Nullable="false" />
+        <NavigationProperty Name="Expert" Type="IfdApiService.Models.XtdExpert" />
+        <NavigationProperty Name="ExpertExplanation" Type="IfdApiService.Models.XtdMultiLanguageText" />
+      </EntityType>
+      <EntityType Name="XtdExternalDocument" BaseType="IfdApiService.Models.XtdConcept">
+        <Property Name="DateOfPublication" Type="Edm.DateTimeOffset" />
+        <Property Name="Author" Type="Edm.String" />
+        <Property Name="ISBN" Type="Edm.String" />
+        <Property Name="Publisher" Type="Edm.String" />
+        <Property Name="URI" Type="Edm.String" />
+        <NavigationProperty Name="Languages" Type="Collection(IfdApiService.Models.XtdLanguage)" />
+      </EntityType>
+      <EntityType Name="XtdFilter" BaseType="IfdApiService.Models.XtdConcept">
+        <NavigationProperty Name="Property" Type="IfdApiService.Models.XtdProperty" />
+        <NavigationProperty Name="FilteringValue" Type="IfdApiService.Models.XtdValueList" />
+        <NavigationProperty Name="FilteringInterval" Type="IfdApiService.Models.XtdInterval" />
+      </EntityType>
+      <EntityType Name="XtdInterval" BaseType="IfdApiService.Models.XtdRoot">
+        <Property Name="MinimumIncluded" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="MaximumIncluded" Type="Edm.Boolean" Nullable="false" />
+        <NavigationProperty Name="Minimum" Type="IfdApiService.Models.XtdValueList" />
+        <NavigationProperty Name="Maximum" Type="IfdApiService.Models.XtdValueList" />
+      </EntityType>
+      <EntityType Name="XtdLanguage" BaseType="IfdApiService.Models.XtdRoot">
+        <Property Name="EnglishName" Type="Edm.String" />
+        <Property Name="NativeName" Type="Edm.String" />
+        <Property Name="Code" Type="Edm.String" />
+        <NavigationProperty Name="Comments" Type="Collection(IfdApiService.Models.XtdLanguage_Comment)" />
+      </EntityType>
+      <EntityType Name="XtdMedia" BaseType="IfdApiService.Models.XtdRoot">
+        <Property Name="Mime" Type="Edm.String" />
+        <Property Name="Data" Type="Edm.Binary" />
+      </EntityType>
+      <EntityType Name="XtdMultiLanguageText" BaseType="IfdApiService.Models.XtdRoot">
+        <NavigationProperty Name="Texts" Type="Collection(IfdApiService.Models.XtdText)" />
+      </EntityType>
+      <EntityType Name="XtdOrderedValue" BaseType="IfdApiService.Models.XtdObject">
+        <Property Name="Order" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Value" Type="IfdApiService.Models.XtdValue" />
+      </EntityType>
+      <EntityType Name="XtdProperty" BaseType="IfdApiService.Models.XtdConcept">
+        <Property Name="DataType" Type="IfdApiService.Models.XtdDataTypeEnum" Nullable="false" />
+        <Property Name="DataFormat" Type="Edm.String" />
+        <NavigationProperty Name="Dimension" Type="IfdApiService.Models.XtdDimension" />
+        <NavigationProperty Name="Symbols" Type="Collection(IfdApiService.Models.XtdSymbol)" />
+        <NavigationProperty Name="PossibleValues" Type="Collection(IfdApiService.Models.XtdValueList)" />
+        <NavigationProperty Name="BoundaryValues" Type="Collection(IfdApiService.Models.XtdInterval)" />
+        <NavigationProperty Name="Units" Type="Collection(IfdApiService.Models.XtdUnit)" />
+        <NavigationProperty Name="ConnectedProperties" Type="Collection(IfdApiService.Models.XtdRelationshipToProperty)" />
+        <NavigationProperty Name="QuantityKinds" Type="Collection(IfdApiService.Models.XtdQuantityKind)" />
+        <NavigationProperty Name="IsUsedByFilters" Type="Collection(IfdApiService.Models.XtdFilter)" />
+        <NavigationProperty Name="IsUsedBySubjects" Type="Collection(IfdApiService.Models.XtdSubject)" />
+      </EntityType>
+      <EntityType Name="XtdQuantityKind" BaseType="IfdApiService.Models.XtdConcept">
+        <NavigationProperty Name="Dimension" Type="IfdApiService.Models.XtdDimension" />
+        <NavigationProperty Name="Units" Type="Collection(IfdApiService.Models.XtdUnit)" />
+      </EntityType>
+      <EntityType Name="XtdRational" BaseType="IfdApiService.Models.XtdRoot">
+        <Property Name="Numerator" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Denominator" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      <EntityType Name="XtdRelationshipToProperty" BaseType="IfdApiService.Models.XtdConcept">
+        <Property Name="RelationshipType" Type="IfdApiService.Models.XtdPropertyRelationshipTypeEnum" Nullable="false" />
+        <NavigationProperty Name="TargetProperties" Type="Collection(IfdApiService.Models.XtdProperty)" />
+      </EntityType>
+      <EntityType Name="XtdRelationshipToSubject" BaseType="IfdApiService.Models.XtdObject">
+        <NavigationProperty Name="RelationshipType" Type="IfdApiService.Models.XtdRelationshipType" />
+        <NavigationProperty Name="TargetSubjects" Type="Collection(IfdApiService.Models.XtdSubject)" />
+        <NavigationProperty Name="ScopeSubjects" Type="Collection(IfdApiService.Models.XtdSubject)" />
+      </EntityType>
+      <EntityType Name="XtdRelationshipType" BaseType="IfdApiService.Models.XtdConcept">
+        <Property Name="Kind" Type="IfdApiService.Models.XtdRelationshipKindEnum" Nullable="false" />
+      </EntityType>
+      <EntityType Name="XtdSubdivision" BaseType="IfdApiService.Models.XtdConcept">
+        <Property Name="Code" Type="Edm.String" />
+        <NavigationProperty Name="Subdivisions" Type="Collection(IfdApiService.Models.XtdSubdivision)" />
+      </EntityType>
+      <EntityType Name="XtdSubject" BaseType="IfdApiService.Models.XtdConcept">
+        <NavigationProperty Name="Properties" Type="Collection(IfdApiService.Models.XtdProperty)" />
+        <NavigationProperty Name="ConnectedSubjects" Type="Collection(IfdApiService.Models.XtdRelationshipToSubject)" />
+        <NavigationProperty Name="Filters" Type="Collection(IfdApiService.Models.XtdFilter)" />
+      </EntityType>
+      <EntityType Name="XtdSymbol" BaseType="IfdApiService.Models.XtdRoot">
+        <NavigationProperty Name="Symbol" Type="IfdApiService.Models.XtdText" />
+        <NavigationProperty Name="Subject" Type="IfdApiService.Models.XtdSubject" />
+      </EntityType>
+      <EntityType Name="XtdText" BaseType="IfdApiService.Models.XtdRoot">
+        <Property Name="Text" Type="Edm.String" />
+        <NavigationProperty Name="Language" Type="IfdApiService.Models.XtdLanguage" />
+      </EntityType>
+      <EntityType Name="XtdUnit" BaseType="IfdApiService.Models.XtdConcept">
+        <Property Name="Scale" Type="IfdApiService.Models.XtdUnitScaleEnum" Nullable="false" />
+        <Property Name="Base" Type="IfdApiService.Models.XtdUnitBaseEnum" Nullable="false" />
+        <NavigationProperty Name="Dimension" Type="IfdApiService.Models.XtdDimension" />
+        <NavigationProperty Name="Symbol" Type="IfdApiService.Models.XtdMultiLanguageText" />
+        <NavigationProperty Name="Coefficient" Type="IfdApiService.Models.XtdRational" />
+        <NavigationProperty Name="Offset" Type="IfdApiService.Models.XtdRational" />
+      </EntityType>
+      <EntityType Name="XtdUser" BaseType="IfdApiService.Models.XtdRoot" />
+      <EntityType Name="XtdUserWithRoles" BaseType="IfdApiService.Models.XtdRoot">
+        <NavigationProperty Name="Dictionary" Type="IfdApiService.Models.XtdDictionary" />
+        <NavigationProperty Name="User" Type="IfdApiService.Models.XtdUser" />
+        <NavigationProperty Name="Roles" Type="Collection(IfdApiService.Models.XtdUserWithRoles_Role)" />
+      </EntityType>
+      <EntityType Name="XtdValue" BaseType="IfdApiService.Models.XtdObject">
+        <Property Name="NominalValue" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="XtdValueList" BaseType="IfdApiService.Models.XtdConcept">
+        <NavigationProperty Name="Unit" Type="IfdApiService.Models.XtdUnit" />
+        <NavigationProperty Name="Values" Type="Collection(IfdApiService.Models.XtdOrderedValue)" />
+        <NavigationProperty Name="Language" Type="IfdApiService.Models.XtdLanguage" />
+      </EntityType>
+      <EntityType Name="XtdVisualRepresentation" BaseType="IfdApiService.Models.XtdConcept">
+        <NavigationProperty Name="Media" Type="Collection(IfdApiService.Models.XtdMedia)" />
+        <NavigationProperty Name="Language" Type="IfdApiService.Models.XtdLanguage" />
+      </EntityType>
+      <EnumType Name="XtdRoleEnum">
+        <Member Name="XTD_READER" Value="0" />
+        <Member Name="XTD_CONTRIBUTOR" Value="1" />
+        <Member Name="XTD_EXPERT" Value="2" />
+        <Member Name="XTD_ADMINISTRATOR" Value="3" />
+      </EnumType>
+      <EnumType Name="XtdStatusOfActivationEnum">
+        <Member Name="XTD_ACTIVE" Value="0" />
+        <Member Name="XTD_INACTIVE" Value="1" />
+      </EnumType>
+      <EnumType Name="XtdNatureOfChangeEnum">
+        <Member Name="XTD_SIMPLE_CREATION" Value="0" />
+        <Member Name="XTD_SIMPLE_MODIFICATION" Value="1" />
+        <Member Name="XTD_SIMPLE_DEACTIVATION" Value="2" />
+        <Member Name="XTD_REPLACEMENT" Value="3" />
+        <Member Name="XTD_FRAGMENTATION" Value="4" />
+        <Member Name="XTD_MERGING" Value="5" />
+      </EnumType>
+      <EnumType Name="XtdExternalStatusEnum">
+        <Member Name="XTD_PENDING_ASSIGNEMENT" Value="0" />
+        <Member Name="XTD_UNDERGOING_ANALYSIS" Value="1" />
+        <Member Name="XTD_PENDING_INFORMATION_REQUEST" Value="2" />
+        <Member Name="XTD_VALIDATED" Value="3" />
+        <Member Name="XTD_REJECTED" Value="4" />
+      </EnumType>
+      <EnumType Name="XtdInternalStatusEnum">
+        <Member Name="XTD_UNDERGOING_ANALYSIS" Value="0" />
+        <Member Name="XTD_PENDING_INFORMATION_REQUEST" Value="1" />
+        <Member Name="XTD_NOT_COMPETENT" Value="2" />
+        <Member Name="XTD_VALIDATED" Value="3" />
+        <Member Name="XTD_REJECTED" Value="4" />
+      </EnumType>
+      <EnumType Name="XtdRelationshipKindEnum">
+        <Member Name="XTD_INSTANCE_LEVEL" Value="0" />
+        <Member Name="XTD_SCHEMA_LEVEL" Value="1" />
+      </EnumType>
+      <EnumType Name="XtdUnitScaleEnum">
+        <Member Name="XTD_LINEAR" Value="0" />
+        <Member Name="XTD_LOGARITHMIC" Value="1" />
+      </EnumType>
+      <EnumType Name="XtdUnitBaseEnum">
+        <Member Name="XTD_ONE" Value="0" />
+        <Member Name="XTD_TWO" Value="1" />
+        <Member Name="XTD_E" Value="2" />
+        <Member Name="XTD_PI" Value="3" />
+        <Member Name="XTD_TEN" Value="4" />
+      </EnumType>
+      <EnumType Name="XtdPropertyRelationshipTypeEnum">
+        <Member Name="XTD_DEPENDS" Value="0" />
+        <Member Name="XTD_SPECIALIZES" Value="1" />
+      </EnumType>
+      <EnumType Name="XtdDataTypeEnum">
+        <Member Name="XTD_BOOLEAN" Value="0" />
+        <Member Name="XTD_INTEGER" Value="1" />
+        <Member Name="XTD_RATIONAL" Value="2" />
+        <Member Name="XTD_REAL" Value="3" />
+        <Member Name="XTD_COMPLEX" Value="4" />
+        <Member Name="XTD_STRING" Value="5" />
+        <Member Name="XTD_DATETIME" Value="6" />
+      </EnumType>
+    </Schema>
+    <Schema Namespace="Default" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="IfdApiServiceContainer">
+        <EntitySet Name="XtdRoot" EntityType="IfdApiService.Models.XtdRoot">
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdChangeRequest/Applicant" Target="XtdUser" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdChangeRequest/ApplicantExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdChangeRequest/Experts" Target="XtdExpertWithStatus" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdChangeRequest/NewObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/VisualRepresentations" Target="XtdVisualRepresentation" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdCountry/Subdivisions" Target="XtdSubdivision" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDictionary/Name" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/AmountOfSubstanceExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/ElectricCurrentExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/LengthExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/LuminousIntensityExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/MassExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/ThermodynamicTemperatureExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/TimeExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdExpert/AreasOfExpertise" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdExpert/UserWithRoles" Target="XtdUserWithRoles" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdExpertWithStatus/Expert" Target="XtdExpert" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdExpertWithStatus/ExpertExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdExternalDocument/Languages" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdFilter/FilteringInterval" Target="XtdInterval" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdFilter/FilteringValue" Target="XtdValueList" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdFilter/Property" Target="XtdProperty" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdInterval/Maximum" Target="XtdValueList" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdInterval/Minimum" Target="XtdValueList" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdLanguage/Comments" Target="XtdLanguage_Comment" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdMultiLanguageText/Texts" Target="XtdText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdObject/DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdObject/Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdObject/Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdObject/ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdObject/ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdOrderedValue/Value" Target="XtdValue" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/BoundaryValues" Target="XtdInterval" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/ConnectedProperties" Target="XtdRelationshipToProperty" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/Dimension" Target="XtdDimension" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/IsUsedByFilters" Target="XtdFilter" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/IsUsedBySubjects" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/PossibleValues" Target="XtdValueList" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/QuantityKinds" Target="XtdQuantityKind" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/Symbols" Target="XtdSymbol" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/Units" Target="XtdUnit" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdQuantityKind/Dimension" Target="XtdDimension" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdQuantityKind/Units" Target="XtdUnit" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdRelationshipToProperty/TargetProperties" Target="XtdProperty" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdRelationshipToSubject/RelationshipType" Target="XtdRelationshipType" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdRelationshipToSubject/ScopeSubjects" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdRelationshipToSubject/TargetSubjects" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSubdivision/Subdivisions" Target="XtdSubdivision" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSubject/ConnectedSubjects" Target="XtdRelationshipToSubject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSubject/Filters" Target="XtdFilter" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSubject/Properties" Target="XtdProperty" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSymbol/Subject" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSymbol/Symbol" Target="XtdText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdText/Language" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUnit/Coefficient" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUnit/Dimension" Target="XtdDimension" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUnit/Offset" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUnit/Symbol" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUserWithRoles/Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUserWithRoles/Roles" Target="XtdUserWithRoles_Role" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUserWithRoles/User" Target="XtdUser" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdValueList/Language" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdValueList/Unit" Target="XtdUnit" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdValueList/Values" Target="XtdOrderedValue" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdVisualRepresentation/Language" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdVisualRepresentation/Media" Target="XtdMedia" />
+        </EntitySet>
+        <EntitySet Name="XtdChangeRequest" EntityType="IfdApiService.Models.XtdChangeRequest">
+          <NavigationPropertyBinding Path="Applicant" Target="XtdUser" />
+          <NavigationPropertyBinding Path="ApplicantExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Experts" Target="XtdExpertWithStatus" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="NewObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+        </EntitySet>
+        <EntitySet Name="XtdConcept" EntityType="IfdApiService.Models.XtdConcept">
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdCountry/Subdivisions" Target="XtdSubdivision" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/AmountOfSubstanceExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/ElectricCurrentExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/LengthExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/LuminousIntensityExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/MassExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/ThermodynamicTemperatureExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/TimeExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdExternalDocument/Languages" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdFilter/FilteringInterval" Target="XtdInterval" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdFilter/FilteringValue" Target="XtdValueList" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdFilter/Property" Target="XtdProperty" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/BoundaryValues" Target="XtdInterval" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/ConnectedProperties" Target="XtdRelationshipToProperty" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/Dimension" Target="XtdDimension" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/IsUsedByFilters" Target="XtdFilter" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/IsUsedBySubjects" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/PossibleValues" Target="XtdValueList" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/QuantityKinds" Target="XtdQuantityKind" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/Symbols" Target="XtdSymbol" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/Units" Target="XtdUnit" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdQuantityKind/Dimension" Target="XtdDimension" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdQuantityKind/Units" Target="XtdUnit" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdRelationshipToProperty/TargetProperties" Target="XtdProperty" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSubdivision/Subdivisions" Target="XtdSubdivision" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSubject/ConnectedSubjects" Target="XtdRelationshipToSubject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSubject/Filters" Target="XtdFilter" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSubject/Properties" Target="XtdProperty" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUnit/Coefficient" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUnit/Dimension" Target="XtdDimension" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUnit/Offset" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUnit/Symbol" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdValueList/Language" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdValueList/Unit" Target="XtdUnit" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdValueList/Values" Target="XtdOrderedValue" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdVisualRepresentation/Language" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdVisualRepresentation/Media" Target="XtdMedia" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdCountry" EntityType="IfdApiService.Models.XtdCountry">
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="Subdivisions" Target="XtdSubdivision" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdDictionary" EntityType="IfdApiService.Models.XtdDictionary">
+          <NavigationPropertyBinding Path="Name" Target="XtdMultiLanguageText" />
+        </EntitySet>
+        <EntitySet Name="XtdDimension" EntityType="IfdApiService.Models.XtdDimension">
+          <NavigationPropertyBinding Path="AmountOfSubstanceExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="ElectricCurrentExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="LengthExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="LuminousIntensityExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="MassExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="ThermodynamicTemperatureExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="TimeExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdExpert" EntityType="IfdApiService.Models.XtdExpert">
+          <NavigationPropertyBinding Path="AreasOfExpertise" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="UserWithRoles" Target="XtdUserWithRoles" />
+        </EntitySet>
+        <EntitySet Name="XtdExpertWithStatus" EntityType="IfdApiService.Models.XtdExpertWithStatus">
+          <NavigationPropertyBinding Path="Expert" Target="XtdExpert" />
+          <NavigationPropertyBinding Path="ExpertExplanation" Target="XtdMultiLanguageText" />
+        </EntitySet>
+        <EntitySet Name="XtdExternalDocument" EntityType="IfdApiService.Models.XtdExternalDocument">
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Languages" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdFilter" EntityType="IfdApiService.Models.XtdFilter">
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="FilteringInterval" Target="XtdInterval" />
+          <NavigationPropertyBinding Path="FilteringValue" Target="XtdValueList" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Property" Target="XtdProperty" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdInterval" EntityType="IfdApiService.Models.XtdInterval">
+          <NavigationPropertyBinding Path="Maximum" Target="XtdValueList" />
+          <NavigationPropertyBinding Path="Minimum" Target="XtdValueList" />
+        </EntitySet>
+        <EntitySet Name="XtdLanguage" EntityType="IfdApiService.Models.XtdLanguage">
+          <NavigationPropertyBinding Path="Comments" Target="XtdLanguage_Comment" />
+        </EntitySet>
+        <EntitySet Name="XtdLanguage_Comment" EntityType="IfdApiService.Models.XtdLanguage_Comment" />
+        <EntitySet Name="XtdMedia" EntityType="IfdApiService.Models.XtdMedia" />
+        <EntitySet Name="XtdMultiLanguageText" EntityType="IfdApiService.Models.XtdMultiLanguageText">
+          <NavigationPropertyBinding Path="Texts" Target="XtdText" />
+        </EntitySet>
+        <EntitySet Name="XtdObject" EntityType="IfdApiService.Models.XtdObject">
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdChangeRequest/Applicant" Target="XtdUser" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdChangeRequest/ApplicantExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdChangeRequest/Experts" Target="XtdExpertWithStatus" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdChangeRequest/NewObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdConcept/VisualRepresentations" Target="XtdVisualRepresentation" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdCountry/Subdivisions" Target="XtdSubdivision" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/AmountOfSubstanceExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/ElectricCurrentExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/LengthExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/LuminousIntensityExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/MassExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/ThermodynamicTemperatureExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdDimension/TimeExponent" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdExternalDocument/Languages" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdFilter/FilteringInterval" Target="XtdInterval" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdFilter/FilteringValue" Target="XtdValueList" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdFilter/Property" Target="XtdProperty" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdOrderedValue/Value" Target="XtdValue" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/BoundaryValues" Target="XtdInterval" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/ConnectedProperties" Target="XtdRelationshipToProperty" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/Dimension" Target="XtdDimension" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/IsUsedByFilters" Target="XtdFilter" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/IsUsedBySubjects" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/PossibleValues" Target="XtdValueList" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/QuantityKinds" Target="XtdQuantityKind" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/Symbols" Target="XtdSymbol" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdProperty/Units" Target="XtdUnit" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdQuantityKind/Dimension" Target="XtdDimension" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdQuantityKind/Units" Target="XtdUnit" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdRelationshipToProperty/TargetProperties" Target="XtdProperty" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdRelationshipToSubject/RelationshipType" Target="XtdRelationshipType" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdRelationshipToSubject/ScopeSubjects" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdRelationshipToSubject/TargetSubjects" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSubdivision/Subdivisions" Target="XtdSubdivision" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSubject/ConnectedSubjects" Target="XtdRelationshipToSubject" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSubject/Filters" Target="XtdFilter" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdSubject/Properties" Target="XtdProperty" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUnit/Coefficient" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUnit/Dimension" Target="XtdDimension" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUnit/Offset" Target="XtdRational" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdUnit/Symbol" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdValueList/Language" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdValueList/Unit" Target="XtdUnit" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdValueList/Values" Target="XtdOrderedValue" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdVisualRepresentation/Language" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="IfdApiService.Models.XtdVisualRepresentation/Media" Target="XtdMedia" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+        </EntitySet>
+        <EntitySet Name="XtdOrderedValue" EntityType="IfdApiService.Models.XtdOrderedValue">
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="Value" Target="XtdValue" />
+        </EntitySet>
+        <EntitySet Name="XtdProperty" EntityType="IfdApiService.Models.XtdProperty">
+          <NavigationPropertyBinding Path="BoundaryValues" Target="XtdInterval" />
+          <NavigationPropertyBinding Path="ConnectedProperties" Target="XtdRelationshipToProperty" />
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Dimension" Target="XtdDimension" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="IsUsedByFilters" Target="XtdFilter" />
+          <NavigationPropertyBinding Path="IsUsedBySubjects" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="PossibleValues" Target="XtdValueList" />
+          <NavigationPropertyBinding Path="QuantityKinds" Target="XtdQuantityKind" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="Symbols" Target="XtdSymbol" />
+          <NavigationPropertyBinding Path="Units" Target="XtdUnit" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdQuantityKind" EntityType="IfdApiService.Models.XtdQuantityKind">
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Dimension" Target="XtdDimension" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="Units" Target="XtdUnit" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdRational" EntityType="IfdApiService.Models.XtdRational" />
+        <EntitySet Name="XtdRelationshipToProperty" EntityType="IfdApiService.Models.XtdRelationshipToProperty">
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="TargetProperties" Target="XtdProperty" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdRelationshipToSubject" EntityType="IfdApiService.Models.XtdRelationshipToSubject">
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="RelationshipType" Target="XtdRelationshipType" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ScopeSubjects" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="TargetSubjects" Target="XtdSubject" />
+        </EntitySet>
+        <EntitySet Name="XtdRelationshipType" EntityType="IfdApiService.Models.XtdRelationshipType">
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdSubdivision" EntityType="IfdApiService.Models.XtdSubdivision">
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="Subdivisions" Target="XtdSubdivision" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdSubject" EntityType="IfdApiService.Models.XtdSubject">
+          <NavigationPropertyBinding Path="ConnectedSubjects" Target="XtdRelationshipToSubject" />
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Filters" Target="XtdFilter" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Properties" Target="XtdProperty" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdSymbol" EntityType="IfdApiService.Models.XtdSymbol">
+          <NavigationPropertyBinding Path="Subject" Target="XtdSubject" />
+          <NavigationPropertyBinding Path="Symbol" Target="XtdText" />
+        </EntitySet>
+        <EntitySet Name="XtdText" EntityType="IfdApiService.Models.XtdText">
+          <NavigationPropertyBinding Path="Language" Target="XtdLanguage" />
+        </EntitySet>
+        <EntitySet Name="XtdUnit" EntityType="IfdApiService.Models.XtdUnit">
+          <NavigationPropertyBinding Path="Coefficient" Target="XtdRational" />
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Dimension" Target="XtdDimension" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Offset" Target="XtdRational" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="Symbol" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdUser" EntityType="IfdApiService.Models.XtdUser" />
+        <EntitySet Name="XtdUserWithRoles" EntityType="IfdApiService.Models.XtdUserWithRoles">
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Roles" Target="XtdUserWithRoles_Role" />
+          <NavigationPropertyBinding Path="User" Target="XtdUser" />
+        </EntitySet>
+        <EntitySet Name="XtdUserWithRoles_Role" EntityType="IfdApiService.Models.XtdUserWithRoles_Role" />
+        <EntitySet Name="XtdValue" EntityType="IfdApiService.Models.XtdValue">
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+        </EntitySet>
+        <EntitySet Name="XtdValueList" EntityType="IfdApiService.Models.XtdValueList">
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Language" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="Unit" Target="XtdUnit" />
+          <NavigationPropertyBinding Path="Values" Target="XtdOrderedValue" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+        <EntitySet Name="XtdVisualRepresentation" EntityType="IfdApiService.Models.XtdVisualRepresentation">
+          <NavigationPropertyBinding Path="CountryOfOrigin" Target="XtdCountry" />
+          <NavigationPropertyBinding Path="Definition" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="DeprecationExplanation" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Descriptions" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Dictionary" Target="XtdDictionary" />
+          <NavigationPropertyBinding Path="Examples" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="Language" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="LanguageOfCreator" Target="XtdLanguage" />
+          <NavigationPropertyBinding Path="Media" Target="XtdMedia" />
+          <NavigationPropertyBinding Path="Names" Target="XtdMultiLanguageText" />
+          <NavigationPropertyBinding Path="ReferenceDocuments" Target="XtdExternalDocument" />
+          <NavigationPropertyBinding Path="ReplacedObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="ReplacingObjects" Target="XtdObject" />
+          <NavigationPropertyBinding Path="SimilarTo" Target="XtdConcept" />
+          <NavigationPropertyBinding Path="VisualRepresentations" Target="XtdVisualRepresentation" />
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
